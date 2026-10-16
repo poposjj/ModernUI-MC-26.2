@@ -2,7 +2,7 @@
 
 - **修改人**：oioi
 - **原作者**：BloCamLimb — 官方仓库 [BloCamLimb/ModernUI-MC](https://github.com/BloCamLimb/ModernUI-MC) · [BloCamLimb/ModernUI](https://github.com/BloCamLimb/ModernUI)
-- **当前版本**：`3.13.0.9`（基于上游 26.2 移植分支构建，目标 Minecraft **26.2** / Fabric）
+- **当前版本**：`3.13.0.9`（目标 Minecraft **26.2**，**仅 Fabric**）
 - **下载地址**：[Releases](https://github.com/poposjj/ModernUI-MC-26.2/releases)
 - **许可**：LGPL-3.0-or-later（继承上游）。**本仓库是第三方修改版，不是官方发布**；上游代码版权归 BloCamLimb 所有。
 
@@ -10,14 +10,31 @@
 
 ---
 
+## 兼容性 / 依赖（先看这里）
+
+| 项目 | 要求 | 本包实测环境 |
+|---|---|---|
+| **Minecraft** | **26.2**（jar 内声明 `>=26.2 <26.3`，26.2.x 均可） | 26.2 ✅ |
+| **加载器** | **仅 Fabric**（本仓库只发布 Fabric 构建；Forge / NeoForge 需自行用源码构建） | Fabric ✅ |
+| **Fabric Loader** | **≥ 0.19.3** | 0.20.0 ✅ |
+| **Fabric API** | **≥ 0.153.0+26.2**（建议用最新，如 `0.161.0+26.2`） | 0.161.0+26.2 ✅ |
+| **Java** | **25**（Minecraft 26.x 强制） | Microsoft OpenJDK 25.0.3 ✅ |
+| **其它前置 mod** | **无**。本移植版用内置的 `SimpleConfigSpec` 取代了 Forge Config API Port，**不需要任何额外依赖 mod** | — |
+| **运行侧** | 客户端专用（`environment: client`），不要装到服务端 | — |
+| **渲染后端** | **OpenGL 已实机验证**；Minecraft 26.x 的原生 Vulkan 路径**尚未在 26.2 实机验证**（改用 Vulkan 前请留意） | OpenGL / NVIDIA 616.92 ✅ |
+| **已知冲突** | jar 内声明与 `blur`、`tipthescales` 冲突；另上游记录：同时装 `Remove Reloading Screen` 且 `hideOverlays = "ALL"` 时可能崩溃，规避办法见下 | — |
+
+**Fabric 与上游其它加载器包的差异**：上游 Forge / NeoForge 构建带有 `C` 缩放键与 Forge Config API Port 依赖；**本 Fabric 包没有缩放键，也不需要任何额外依赖**。
+
+**避免踩坑**：只放一个 ModernUI jar（mod id 都是 `modernui`，与官方 26.1.2 的包不能共存）；`Remove Reloading Screen` 用户如果遇到启动崩溃，把它的配置改成 `[global] hideOverlays = "RELOADING"` 即可。
+
+---
+
 ## 安装
 
 1. 从 [Releases](https://github.com/poposjj/ModernUI-MC-26.2/releases) 下载 `ModernUI-Fabric-26.2-3.13.0.9-universal-fixed.jar`
-2. 放进 `.minecraft/mods/`
-3. 前置要求：**Minecraft 26.2** · **Fabric Loader ≥ 0.19.3** · **Fabric API ≥ 0.153.0+26.2** · **Java 25**
-
-> 只安装一个 ModernUI jar（mod id 均为 `modernui`，不要与官方 26.1.2 的包同时放）。
-> 游戏内按 **Ctrl + K** 打开「ModernUI 操作中心」。
+2. 放进 `.minecraft/mods/`（与 `fabric-api-*.jar` 同级）
+3. 启动游戏，按 **Ctrl + K** 打开「ModernUI 操作中心」
 
 ---
 
