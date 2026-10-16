@@ -88,6 +88,29 @@ ModernUI · Minecraft 26.2 修改版
 
 <img src="https://capsule-render.vercel.app/api?type=soft&color=gradient&customColorList=12&height=3" width="100%" />
 
+<h2 id="-开箱即用" align="center">
+<img src="https://media.giphy.com/media/Sqlj82Xy4eZKSU9iVM/giphy.gif" width="30px" height="30px" style="vertical-align: middle; position: relative; top: -2px;"/>
+开箱即用 · 无需二次修改
+</h2>
+
+> **本 Release 提供的 jar 可直接放入 `mods/` 使用，无需任何二次修改（无需打补丁、无需重签名、无需改启动参数、无需手工编辑配置）。**
+
+以下为可自行核验的依据：
+
+| 核验项 | 结果 |
+|---|---|
+| **构建来源** | 由本仓库源码经 Gradle 构建（`BUILD SUCCESSFUL`，含仓库自带单元测试全部通过） |
+| **是否经过二次打包** | **否**。与 GitHub Actions 在本仓库**同一份源码**上独立构建的产物逐条目比对：**5527 个条目完全一致**，其中 **1845 个 class 文件字节级完全相同**，唯一差异是 `MANIFEST.MF` 的构建时间戳 |
+| **附加前置 Mod** | **不需要**。本移植版以内置 `SimpleConfigSpec` 取代 Forge Config API Port，不依赖任何第三方配置库 |
+| **启动器 / JVM 参数** | **不需要额外设置**，沿用原版默认参数即可（JDK 25 是 Minecraft 26.x 的硬性要求） |
+| **手工编辑配置** | **不需要**。首次启动自动生成 `config/ModernUI/client-standard.toml`、`common.toml`、`text.toml` |
+| **实机验证** | Minecraft 26.2 + Fabric Loader 0.20.0 + Fabric API 0.161.0+26.2 + Java 25 + OpenGL（NVIDIA 616.92）：启动、进入世界、文本渲染、配置读写均已实际运行且无报错 |
+| **防篡改校验** | 发布资产 SHA256：`DB6B82A1E854F650F9C3FF881E822D464E07D0E1E341840E8E6EE9693799353A`（可用 `certutil -hashfile <jar> SHA256` 自行比对） |
+
+**未验证项（如实声明）**：Minecraft 26.x 的原生 **Vulkan 渲染路径**未在 26.2 上做实机验证；使用默认的 OpenGL 后端不受影响。若上游发布 26.2 正式版，建议优先使用官方版本。
+
+<img src="https://capsule-render.vercel.app/api?type=soft&color=gradient&customColorList=12&height=3" width="100%" />
+
 <h2 id="-兼容性与依赖" align="center">
 <img src="https://media.giphy.com/media/jSKBmKkvo2dPQQtsR1/giphy.gif" width="25px" height="25px" style="vertical-align: middle; position: relative; top: -2px;"/>
 兼容性与依赖
