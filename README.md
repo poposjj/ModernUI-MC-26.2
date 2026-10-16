@@ -189,8 +189,6 @@ ModernUI · Minecraft 26.2 修改版
 
 <div align="center">
 
-<img src="https://github-profile-trophy.vercel.app/?username=poposjj&theme=radical&no-frame=true&row=1&column=7" width="100%" alt="GitHub 奖杯" />
-
 <img src="https://github-readme-stats.vercel.app/api?username=poposjj&show_icons=true&theme=radical&hide_border=true&title_color=FF5F6D&icon_color=FFC371&include_all_commits=true&count_private=true" width="49%" alt="GitHub 统计"/>
 <img src="https://github-readme-streak-stats.herokuapp.com/?user=poposjj&theme=radical&hide_border=true" width="49%" alt="连续贡献"/>
 
