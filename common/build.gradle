@@ -1,0 +1,78 @@
+plugins {
+    id 'org.relativitymc.neo-loom'
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/modernui.classtweaker")
+}
+
+repositories {
+    maven {
+        url 'https://repo.spongepowered.org/repository/maven-public/'
+    }
+    maven {
+        url 'https://maven.izzel.io/releases/'
+    }
+    mavenLocal()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    compileOnly 'org.spongepowered:mixin:0.8.7'
+    compileOnly 'org.ow2.asm:asm-tree:9.8'
+    testImplementation 'org.ow2.asm:asm-tree:9.8'
+
+    implementation("dev.icyllis:modernui-core:${core_version}")
+    implementation("icyllis.modernui:ModernUI-Markflow:3.12.0") {
+        transitive = false
+    }
+
+    compileOnly("org.lwjgl:lwjgl-vulkan:3.4.1")
+}
+
+test {
+    failOnNoDiscoveredTests = false
+}
+
+tasks.register('checkTextMarquee', JavaExec) {
+    group = 'verification'
+    description = 'Checks continuous text movement, filtering and Canvas cache reuse without a GPU.'
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'icyllis.modernui.mc.test.TextMarqueeCheck'
+    systemProperty 'modernui.projectRoot', rootProject.projectDir.absolutePath
+}
+
+check.dependsOn checkTextMarquee
+
+// A task-backed source directory also supplies the dependency to loader compiles,
+// which compile the common sources directly.
+def generateFontVariant = tasks.register('generateFontVariant') {
+    def output = layout.buildDirectory.dir('generated/sources/fontVariant/java')
+    inputs.property('fontVariant', rootProject.fontVariant)
+    outputs.dir(output)
+    doLast {
+        def target = output.get().file('icyllis/modernui/mc/FontVariant.java').asFile
+        target.parentFile.mkdirs()
+        target.text = """package icyllis.modernui.mc;
+
+/** Build-time edition; never selected by a runtime property or config file. */
+public final class FontVariant {
+    public static final boolean MISANS = ${rootProject.fontVariant == 'misans'};
+    public static final String NAME = "${rootProject.fontVariant}";
+    public static final String CLIENT_CONFIG_NAME = "client-${rootProject.fontVariant}.toml";
+    private FontVariant() {}
+}
+"""
+    }
+}
+sourceSets.main.java.srcDir(generateFontVariant)
+
+tasks.register('checkFontVariant', JavaExec) {
+    group = 'verification'
+    description = 'Checks font defaults, legacy configuration isolation and compiled edition boundaries.'
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'icyllis.modernui.mc.test.FontVariantCheck'
+}
+check.dependsOn checkFontVariant

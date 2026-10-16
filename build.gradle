@@ -1,0 +1,82 @@
+plugins {
+    id 'maven-publish'
+    id 'org.relativitymc.neo-loom' version '1.16-SNAPSHOT' apply false
+    id 'com.gradleup.shadow' version '9.3.0' apply false
+}
+
+publishing {
+    repositories {
+        maven {
+            name 'IzzelAliz'
+            url 'https://maven.izzel.io/releases'
+            credentials {
+                username = project.findProperty("izzel_maven_user")
+                password = project.findProperty("izzel_maven_old_token")
+            }
+        }
+    }
+}
+
+// A compile-time choice: standard artifacts contain no MiSans installer.
+ext.fontVariant = providers.gradleProperty('font_variant').getOrElse('standard')
+if (!(fontVariant in ['standard', 'misans'])) {
+    throw new GradleException('font_variant must be standard or misans')
+}
+ext.fontVariantDisplayName = fontVariant == 'misans' ? 'Modern UI (MiSans)' : 'Modern UI'
+
+subprojects {
+    apply plugin: 'java'
+
+    group = 'icyllis.modernui'
+
+    java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+    repositories {
+        mavenCentral()
+        maven {
+            name = "MavenCentralLWJGL"
+            url = "https://repo.maven.apache.org/maven2/"
+            content {
+                includeGroup "org.lwjgl"
+            }
+        }
+        maven {
+            url "https://central.sonatype.com/repository/maven-snapshots"
+        }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = "Modrinth"
+                    url = "https://api.modrinth.com/maven"
+                }
+            }
+            filter {
+                includeGroup "maven.modrinth"
+            }
+        }
+    }
+
+    dependencies {
+        compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+        compileOnly 'org.jetbrains:annotations:26.0.2'
+        testCompileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+        testCompileOnly 'org.jetbrains:annotations:26.0.2'
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.encoding = "UTF-8"
+        it.options.release.set(25)
+    }
+
+    tasks.withType(Jar).configureEach {
+        manifest.attributes('ModernUI-Font-Variant': rootProject.fontVariant)
+        if (rootProject.fontVariant == 'standard') {
+            exclude 'icyllis/modernui/mc/MiSansInstaller*.class'
+            exclude 'icyllis/modernui/mc/MiSansSetup*.class'
+        }
+    }
+
+    java {
+        withSourcesJar()
+    }
+}
